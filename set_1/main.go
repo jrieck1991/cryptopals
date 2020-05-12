@@ -75,27 +75,25 @@ func ByteStringToBase64(b []byte) string {
 		"4", "5", "6", "7", "8", "9", "+", "/",
 	}
 
+	// for remainder
 	padding := "="
 
 	var result []string
 
 	for i := 0; i < len(b)-1; i += 3 {
 
-		var c1Str, c2Str, c3Str, c4Str string
-
 		// copy first byte
 		cb1 := b[i]
 
 		// grab first 6 bits
 		c1 := b[i] >> 2
-		c1Str = base64LookupTable[c1]
 
 		// get last 2 bits of byte 1
 		l := cb1 & 0x03
 		l = l << 4
 
 		if i+1 >= len(b)-1 {
-			result = append(result, c1Str, padding, padding, padding)
+			result = append(result, base64LookupTable[c1], padding, padding, padding)
 			continue
 		}
 
@@ -107,14 +105,13 @@ func ByteStringToBase64(b []byte) string {
 
 		// combine last 2 of byte 1 and first 4 of byte 2
 		c2 := l | x
-		c2Str = base64LookupTable[c2]
 
 		// get last 4 bits of byte 2
 		q := cb2 & 0x0F
 		q = q << 2
 
 		if i+2 > len(b)-1 {
-			result = append(result, c1Str, c2Str, padding, padding)
+			result = append(result, base64LookupTable[c1], base64LookupTable[c2], padding, padding)
 			continue
 		}
 
@@ -126,14 +123,12 @@ func ByteStringToBase64(b []byte) string {
 
 		// combine 4 of byte 2 and first 2 of byte 3
 		c3 := q | r
-		c3Str = base64LookupTable[c3]
 
 		// get last 6 bits of byte 3
 		c4 := cb3 & 0x3F
-		c4Str = base64LookupTable[c4]
 
 		// append string
-		result = append(result, c1Str, c2Str, c3Str, c4Str)
+		result = append(result, base64LookupTable[c1], base64LookupTable[c2], base64LookupTable[c3], base64LookupTable[c4])
 	}
 
 	return strings.Join(result, "")
