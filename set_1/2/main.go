@@ -89,14 +89,7 @@ func HexBytesToASCII(hexBytes []byte) string {
 
 	var hexChars []string
 	for _, b := range hexBytes {
-
-		copyB := b
-
-		b = b >> 4
-
-		copyB = copyB & 0x0F
-
-		hexChars = append(hexChars, fmt.Sprintf("%d", b), fmt.Sprintf("%d", copyB))
+		hexChars = append(hexChars, fmt.Sprintf("%x", b))
 	}
 
 	return strings.Join(hexChars, "")
